@@ -1,5 +1,9 @@
 
 from pathlib import Path
+import os
+import asyncio
+from dotenv import load_dotenv
+from google import genai
 
 from fastapi import FastAPI
 from fastapi.staticfiles import StaticFiles
@@ -7,6 +11,11 @@ from fastapi.responses import FileResponse
 from pydantic import BaseModel
 
 BASE_DIR = Path(__file__).resolve().parent
+load_dotenv(BASE_DIR / ".env")
+
+client = genai.Client(
+    api_key=os.getenv("GEMINI_API_KEY")
+)
 
 app = FastAPI(title="UniVerse AI")
 PAPERS_DIR = BASE_DIR / "papers"
@@ -42,68 +51,49 @@ def health():
     }
 
 
+
 @app.post("/api/ask")
-def ask_question(request: QuestionRequest):
+async def ask_question(request: QuestionRequest):
     question = request.question.strip()
 
     if not question:
         return {"answer": "Please enter a question."}
 
-    q = question.lower()
+    prompt = f"""
+You are UniVerse AI, a friendly and helpful university assistant
+for the University of Vavuniya in Sri Lanka.
 
-    if any(word in q for word in ["hello", "hi", "ayubowan"]):
-        answer = (
-            "Hello! Welcome to UniVerse AI, "
-            "your Smart University Companion. "
-            "How can I help you today?"
-        )
-    elif any(word in q for word in ["universe ai", "what are you", "who are you"]):
-        answer = (
-            "I am UniVerse AI, your Smart University Companion "
-            "demo for the University of Vavuniya. "
-            "I am currently running in free demo mode."
-        )
-    elif any(word in q for word in ["past paper", "past papers", "exam paper"]):
-        answer = (
-            "Past papers section is planned for UniVerse AI. "
-            "Please check official University of Vavuniya sources "
-            "for verified past papers. This demo does not yet "
-            "contain official papers."
-        )
-    elif any(word in q for word in ["procedure", "rules", "deadline", "registration"]):
-        answer = (
-            "I do not yet have verified university procedures or rules "
-            "in this demo. Please check the official University of "
-            "Vavuniya website or contact the relevant university office."
-        )
-    elif any(word in q for word in ["hostel", "accommodation"]):
-        answer = (
-            "Hostel accommodation information is not yet verified "
-            "in this demo. Please contact the University of Vavuniya "
-            "student services or relevant university office."
-        )
-    elif any(word in q for word in ["course", "degree", "faculty"]):
-        answer = (
-            "For accurate course and faculty information, please check "
-            "the official University of Vavuniya website. This demo "
-            "does not yet contain a verified course list."
-        )
-    elif any(word in q for word in ["contact", "phone number", "email"]):
-        answer = (
-            "For verified university contact details, please check "
-            "the official University of Vavuniya website. Contact "
-            "information has not yet been added to this demo."
-        )
-    else:
-        answer = (
-            "Thank you for your question! UniVerse AI is currently "
-            "in demo mode, so I cannot generate a new AI answer yet. "
-            "Please try asking about UniVerse AI, past papers, "
-            "or university procedures."
-        )
+Answer the student's question clearly and simply.
+If you do not know verified university-specific information,
+say so honestly. Never invent university rules, deadlines,
+contact details, or other official information.
 
-    return {
-        "question": question,
-        "answer": answer,
-        "mode": "demo",
-    }
+Student's question: {question}
+"""
+
+    for attempt in range(3):
+        try:
+            response = await asyncio.to_thread(
+                client.models.generate_content,
+                model="gemini-3.8-flash",
+                contents=prompt
+            )
+
+            return {
+                "question": question,
+                "answer": response.text or "No response received.",
+                "mode": "gemini"
+            }
+
+        except Exception as e:
+            print("Gemini Error:", e)
+
+            if "503" in str(e) and attempt < 2:
+                await asyncio.sleep(3 * (attempt + 1))
+                continue
+
+            return {
+                "question": question,
+                "answer": "Sorry! AI response eka ganna bari una. Please try again.",
+                "mode": "error"
+            }
