@@ -1,0 +1,483 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>UniVerse AI | University of Vavuniya</title>
+    
+<style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+
+    html {
+        scroll-behavior: smooth;
+    }
+
+    body {
+        font-family: Arial, sans-serif;
+        background:
+            radial-gradient(ellipse at 50% 0%, #172653 0%, transparent 48%),
+            #080d1b;
+        color: #f4f7ff;
+        min-height: 100vh;
+        line-height: 1.6;
+    }
+
+    header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 20px;
+        padding: 22px 8%;
+        border-bottom: 1px solid rgba(145, 170, 230, 0.15);
+        background: rgba(8, 13, 27, 0.8);
+    }
+
+    .logo {
+        font-size: 26px;
+        font-weight: 800;
+        letter-spacing: -0.8px;
+        color: #8ddcff;
+    }
+
+    .university {
+        color: #aebbd6;
+        font-size: 13px;
+    }
+
+    main {
+        max-width: 950px;
+        margin: 75px auto;
+        padding: 20px;
+        text-align: center;
+    }
+
+    .tag {
+        display: inline-block;
+        color: #c2aaff;
+        border: 1px solid rgba(169, 135, 255, 0.4);
+        background: rgba(121, 79, 220, 0.13);
+        border-radius: 30px;
+        padding: 9px 17px;
+        font-size: 13px;
+        margin-bottom: 25px;
+    }
+
+    h1 {
+        font-size: clamp(36px, 7vw, 66px);
+        line-height: 1.12;
+        letter-spacing: -2px;
+        margin-bottom: 22px;
+    }
+
+    h1 span {
+        background: linear-gradient(90deg, #79ddff, #a995ff);
+        -webkit-background-clip: text;
+        background-clip: text;
+        color: transparent;
+    }
+
+    .description {
+        color: #aebbd6;
+        line-height: 1.9;
+        max-width: 630px;
+        margin: 0 auto 38px;
+    }
+
+    .chat-box {
+        background: rgba(19, 28, 52, 0.9);
+        border: 1px solid #344366;
+        border-radius: 22px;
+        padding: 22px;
+        text-align: left;
+        box-shadow: 0 20px 65px rgba(0, 0, 0, 0.22);
+        transition: border-color 0.25s, box-shadow 0.25s;
+    }
+
+    .chat-box:focus-within {
+        border-color: #8c91ff;
+        box-shadow: 0 0 0 3px rgba(140, 145, 255, 0.1);
+    }
+
+    textarea {
+        width: 100%;
+        min-height: 110px;
+        resize: vertical;
+        background: transparent;
+        color: #f4f7ff;
+        border: none;
+        outline: none;
+        font-size: 16px;
+        font-family: inherit;
+        line-height: 1.7;
+    }
+
+    textarea::placeholder {
+        color: #7888a8;
+    }
+
+    .chat-bottom {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        gap: 12px;
+        margin-top: 14px;
+        flex-wrap: wrap;
+    }
+
+    .hint {
+        color: #8d9cba;
+        font-size: 12px;
+    }
+
+    button {
+        background: linear-gradient(100deg, #83ddff, #a9a0ff);
+        color: #10162b;
+        border: none;
+        border-radius: 12px;
+        padding: 13px 23px;
+        font-weight: 700;
+        font-size: 14px;
+        cursor: pointer;
+        transition: transform 0.2s, filter 0.2s;
+    }
+
+    button:hover {
+        filter: brightness(1.08);
+        transform: translateY(-2px);
+    }
+
+    button:active {
+        transform: translateY(0);
+    }
+
+    #response {
+        display: block;
+        margin-top: 20px;
+        padding: 20px;
+        background: rgba(19, 28, 52, 0.9);
+        border: 1px solid #344366;
+        border-radius: 16px;
+        text-align: left;
+        line-height: 1.8;
+        color: #dce8fa;
+        overflow-wrap: anywhere;
+    }
+
+    .features {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 16px;
+        margin-top: 38px;
+        text-align: left;
+    }
+
+    .feature {
+        padding: 23px;
+        border: 1px solid rgba(132, 158, 211, 0.2);
+        background: linear-gradient(145deg, #141d35, #0e1528);
+        border-radius: 18px;
+        transition: transform 0.25s, border-color 0.25s;
+    }
+
+    .feature:hover {
+        transform: translateY(-5px);
+        border-color: #777fe5;
+    }
+
+    .feature h3 {
+        font-size: 16px;
+        margin: 10px 0;
+        color: #f0f4ff;
+    }
+
+    .feature p {
+        font-size: 13px;
+        color: #a8b5cc;
+        line-height: 1.8;
+    }
+
+    #past-papers {
+        box-shadow: 0 18px 55px rgba(0, 0, 0, 0.18);
+    }
+
+    #past-papers input,
+    #past-papers select {
+        background: #0e162b;
+        color: #f4f7ff;
+        border: 1px solid #344366;
+        outline: none;
+    }
+
+    #past-papers input:focus,
+    #past-papers select:focus {
+        border-color: #8c91ff;
+    }
+
+    #past-papers input::placeholder {
+        color: #8491aa;
+    }
+
+    #past-papers .paper-item {
+        background: rgba(10, 17, 34, 0.55);
+        transition: border-color 0.2s, transform 0.2s;
+    }
+
+    #past-papers .paper-item:hover {
+        border-color: #777fe5 !important;
+        transform: translateY(-2px);
+    }
+
+    #past-papers a {
+        text-decoration: none;
+        font-weight: 600;
+    }
+
+    #past-papers a:hover {
+        text-decoration: underline;
+    }
+
+    footer {
+        text-align: center;
+        padding: 30px 15px;
+        margin-top: 50px;
+        border-top: 1px solid rgba(145, 170, 230, 0.12);
+        color: #8491aa;
+        font-size: 12px;
+    }
+
+    @media (max-width: 650px) {
+        header {
+            padding: 18px 5%;
+            align-items: flex-start;
+            gap: 6px;
+            flex-direction: column;
+        }
+
+        main {
+            margin: 42px auto;
+            padding: 16px;
+        }
+
+        h1 {
+            letter-spacing: -1px;
+        }
+
+        .features {
+            grid-template-columns: 1fr;
+        }
+
+        .chat-box {
+            padding: 17px;
+        }
+
+        .chat-bottom {
+            align-items: stretch;
+            flex-direction: column;
+        }
+
+        .chat-bottom button {
+            width: 100%;
+        }
+
+        #past-papers {
+            padding: 20px !important;
+            margin: 20px 0 !important;
+        }
+    }
+</style>
+
+</head>
+<body>
+
+    <header>
+        <div class="logo">✦ UniVerse AI</div>
+        <div class="university">University of Vavuniya</div>
+    </header>
+
+    <main>
+        <div class="tag">✦ YOUR SMART UNIVERSITY COMPANION</div>
+
+        <h1>Your Campus.<br>
+            Your Questions.<br>
+            <span>One AI.</span>
+        </h1>
+
+        <p class="description">
+            Discover a smarter way to navigate university life.
+            Ask questions about campus services, academic information,
+            university procedures and more.
+        </p>
+
+        <div class="chat-box">
+            <textarea id="question"
+                placeholder="Ask anything about university life..."></textarea>
+
+            <div class="chat-bottom">
+                <span class="hint">Sinhala · Tamil · English</span>
+                <button onclick="askQuestion()">Ask UniVerse ↗</button>
+		<p>JavaScript test: <span id="js-test">NOT RUNNING</span></p>
+            </div>
+        </div>
+
+        <div id="response" role="status"></div>
+
+        <div class="features">
+            <div class="feature">
+                <div>🎓</div>
+                <h3>Academic Guide</h3>
+                <p>Find academic information and learning resources.</p>
+            </div>
+
+            <div class="feature">
+                <div>📚</div>
+                <h3>Past Papers</h3>
+                <p>Discover examination resources and past papers.</p>
+            </div>
+
+            <div class="feature">
+                <div>🏛️</div>
+                <h3>Campus Services</h3>
+                <p>Explore university services and student procedures.</p>
+            </div>
+        </div>
+    </main>
+
+    <footer>
+        UniVerse AI · A Student Project for the University of Vavuniya
+    </footer>
+
+   
+<script>
+async function askQuestion() {
+    alert("askQuestion started!");	
+
+    const questionBox = document.getElementById("question");
+    const responseBox = document.getElementById("response");
+    const question = questionBox.value.trim();
+
+    if (!question) {
+        responseBox.textContent = "Please enter a question.";
+        return;
+    }
+
+    responseBox.textContent = "UniVerse AI is thinking...";
+    console.log("Sending question to backend:", question);
+
+    try {
+        const result = await fetch("/api/ask", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                question: question
+            })
+        });
+
+        if (!result.ok) {
+            throw new Error("Server error");
+        }
+
+        const data = await result.json();
+	console.log("Backend response:", data);
+        responseBox.textContent = data.answer;
+
+    } catch (error) {
+    console.error("UniVerse AI error:", error);
+    responseBox.style.display = "block";
+    responseBox.textContent = "Error: " + error.message;
+}
+}
+document.getElementById("js-test").textContent = "RUNNING";
+</script>
+
+<section id="past-papers" style="padding: 30px; margin: 30px 0; background: #151d32; border: 1px solid #303c58; border-radius: 14px; color: #dce8fa;">
+    <h2>📚 Past Papers</h2>
+    <p>University of Vavuniya — Past Papers Hub</p>
+
+    <p>Find and organize past examination papers here.</p>
+
+    <div style="margin: 20px 0;">
+        <label for="paper-search">Search past papers:</label>
+        <input
+            type="text"
+            id="paper-search"
+            placeholder="Search by subject or year..."
+            oninput="searchPapers()"
+            style="width: 100%; padding: 12px; margin-top: 8px; border-radius: 8px;"
+        >
+    </div>
+
+    <div id="paper-list">
+	<div style="display: flex; gap: 10px; flex-wrap: wrap; margin: 15px 0;">
+
+    <select id="faculty-filter" onchange="filterPapers()"
+        style="padding: 10px; border-radius: 8px; flex: 1;">
+        <option value="">All Faculties</option>
+        <option value="technology">Faculty of Technology</option>
+        <option value="business">Faculty of Business Studies</option>
+        <option value="applied">Faculty of Applied Science</option>
+    </select>
+
+    <select id="year-filter" onchange="filterPapers()"
+        style="padding: 10px; border-radius: 8px; flex: 1;">
+        <option value="">All Years</option>
+        <option value="2025">2025</option>
+        <option value="2024">2024</option>
+        <option value="2023">2023</option>
+    </select>
+
+</div>
+        <div class="paper-item" style="padding: 15px; margin: 10px 0; border: 1px solid #303c58; border-radius: 10px;">
+            <h3>📄 Sample PDF</h3>
+            <p>Demo PDF — Faculty and year details not assigned yet.</p>
+            <a href="/papers/sample1.pdf" target="_blank" rel="noopener noreferrer"
+            style="color: #8bb8ff;">
+            Open PDF ↗
+            </a>
+       </div>
+    </div>
+</section>
+
+<script>
+function searchPapers() {
+    const search = document.getElementById("paper-search").value.toLowerCase();
+    const items = document.querySelectorAll(".paper-item");
+
+    items.forEach(function(item) {
+        item.style.display = item.textContent.toLowerCase().includes(search)
+            ? "block"
+            : "none";
+    });
+}
+
+function filterPapers() {
+    const faculty = document.getElementById("faculty-filter").value;
+    const year = document.getElementById("year-filter").value;
+    const search = document.getElementById("paper-search").value.toLowerCase();
+
+    const items = document.querySelectorAll(".paper-item");
+
+    items.forEach(function(item) {
+        const text = item.textContent.toLowerCase();
+
+        const matchesFaculty = !faculty || text.includes(faculty);
+        const matchesYear = !year || text.includes(year);
+        const matchesSearch = !search || text.includes(search);
+
+        item.style.display =
+            matchesFaculty && matchesYear && matchesSearch
+                ? "block"
+                : "none";
+    });
+}
+</script>
+
+
+</body>
+</html>
