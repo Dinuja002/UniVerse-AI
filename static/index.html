@@ -320,7 +320,6 @@
             <div class="chat-bottom">
                 <span class="hint">Sinhala · Tamil · English</span>
                 <button onclick="askQuestion()">Ask UniVerse ↗</button>
-		<p>JavaScript test: <span id="js-test">NOT RUNNING</span></p>
             </div>
         </div>
 
@@ -354,7 +353,7 @@
    
 <script>
 async function askQuestion() {
-    alert("askQuestion started!");	
+    
 
     const questionBox = document.getElementById("question");
     const responseBox = document.getElementById("response");
@@ -393,7 +392,7 @@ async function askQuestion() {
     responseBox.textContent = "Error: " + error.message;
 }
 }
-document.getElementById("js-test").textContent = "RUNNING";
+
 </script>
 
 <section id="past-papers" style="padding: 30px; margin: 30px 0; background: #151d32; border: 1px solid #303c58; border-radius: 14px; color: #dce8fa;">
